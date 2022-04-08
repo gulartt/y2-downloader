@@ -12,30 +12,50 @@ url = input("Insira a URL do vídeo que deseja baixar: ")
 ytb = YouTube(url)
 options = ytb.streams
 
-print("Resoluções disponiveis: ")
+print("Resoluções disponiveis: \n")
 
 # lista todas as resoluções disponíveis 
-
 if(options.filter(res="240p", file_extension='mp4')):
-    print("240p")
+    print("MP4/240p")
 if(options.filter(res="360p", file_extension='mp4')):
-    print("360p")
+    print("MP4/360p")
 if(options.filter(res="480p", file_extension='mp4')):
-    print("480p")
+    print("MP4/480p")
 if(options.filter(res="720p", file_extension='mp4')):
-    print("720p")
+    print("MP4/720p")
 if(options.filter(res="1080p", file_extension='mp4')):
-    print("1080p")
+    print("MP4/1080p")
+if(options.filter(only_audio=True)):
+    print("MP3/Audio")
 
-resolution = input("\nescolha a resolução desejada: ")
-# Verifica se a opção escolhida está disponível
-if(not(options.filter(res=resolution, file_extension='mp4'))):
-    print("Essa resolução não existe, opção inválida!")
+resolution = input("\nSelecione a opção desejada: ")
+
+# Valida a opção escolhida pelo usuário
+def validate(option):
+    if(option == "MP4/240p"):
+        return options.filter(res="240p", file_extension='mp4').first()
+    elif(option == "MP4/360p"):
+        return options.filter(res="360p", file_extension='mp4').first()
+    elif(option == "MP4/480p"):
+        return options.filter(res="480p", file_extension='mp4').first()
+    elif(option == "MP4/720p"):
+        return options.filter(res="720p", file_extension='mp4').first()
+    elif(option == "MP4/1080p"):
+        return options.filter(res="1080p", file_extension='mp4').first()
+    elif(option == "MP3/Audio"):
+        return options.filter(only_audio=True).first()
+    else:
+        return 1
+
+my_video = validate(resolution)
+
+if(my_video == 1):
+    print("Opção inválida!")
 else:
-    print("baixando...");
-    # faz o download do vídeo
-    my_video = options.filter(res=resolution, file_extension='mp4').first().download()
+    print("Baixando...")
+    # faz o download do vídeo ou música
+    my_video.download()
     print("\ndownload concluído!")
     # Pega o diretório atual do script
     cwd = os.getcwd()
-    print(f"Seu vídeo foi armazenado no diretório: {cwd}")
+    print(f"Seu arquivo foi armazenado no diretório: {cwd}")
